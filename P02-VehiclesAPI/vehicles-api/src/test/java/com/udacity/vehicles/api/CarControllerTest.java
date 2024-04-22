@@ -168,4 +168,24 @@ public class CarControllerTest {
         car.setCondition(Condition.USED);
         return car;
     }
+
+    /**
+     * Tests for successful update of new car in the system
+     *
+     * @throws Exception
+     */
+    @Test
+    public void updateCar() throws Exception {
+        Car car = getCar();
+        car.setCondition(Condition.NEW);
+        car.setPrice("1111");
+        mvc.perform(put("/cars/{id}", "1")
+                        .content(json.write(car).getJson())
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.condition", is(Condition.NEW.toString())))
+                .andExpect(jsonPath("$.price", is("1111")));
+    }
+
 }
